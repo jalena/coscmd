@@ -1,8 +1,13 @@
-
-
-
-使用文档
+COSCMD使用文档
 ========
+
+更新
+--------
+1.1.0 增加上传文件夹功能
+
+1.1.1 修改上传部分失败的总结信息
+
+1.2.0 增加了文件夹上传进度条
 
 依赖
 --------
@@ -13,38 +18,69 @@
 安装
 --------
 
-执行如下命令安装:
+在该项目根目录下执行如下命令安装:
 
 .. code::
  
- yum install python-devel libxml2-devel
- pip install coscmd -U --nocache
+ sudo python setup.py install
+
 
 使用方法
+--------
 
 工具的使用前需要配置！你可以直接编辑~/.cos.conf，也可以通过如下命令来配置。
 
 
 配置参数
+!!!!!!!!
 
 .. code::
 
- coscmd config -a youraccessid -s yoursecretkey -u appid -b bucketname -r cn-south
- 
-请将参数替换为您的真实id/key/appid/bucket和园区代号。园区为cn-south或者cn-north。
+ sudo coscmd config -a youraccessid -s yoursecretkey -u appid -b bucketname -r region -m max_thread -p parts_size
+
+
+请将参数替换为您的真实id/key/appid/bucket和园区代号,园区(region)为cn-south或者cn-north。
+
+max_thread为多线程上传时的最大线程数(默认为5)
+
+parts_size为分块上传的单块大小(单位为M)(默认为1M)
 
 
 上传文件
+!!!!!!!!
 
 使用如下命令上传文件：
 
 .. code::
 
- coscmd upload ~/t.cpp t1/t.cpp 
- 2017-01-18 16:55:32,139 - Init multipart upload ok
- 2017-01-18 16:55:32,184 - upload /home/liuchang/t.cpp with  0.00%
- 2017-01-18 16:55:32,184 - upload /home/liuchang/t.cpp with 100.00%
- 2017-01-18 16:55:32,185 - multipart upload ok
- 2017-01-18 16:55:32,226 - complete multipart upload ok
+ sudo coscmd upload localpath cospath 
+
+请将参数替换为您所需要的本地文件路径(localpath)，以及cos上存储的路径(cospath)。
+
+如果本地文件路径是一个文件夹，则会将文件夹以cospath的名字上传
+
+简单示例
+!!!!!!!!
+
+.. code::
+
+ 设置属性
+ coscmd config -a AKKTZbAo6WhgcBqVls9SmuG0ID15IsskiBQ0 -s ciivKvnnrMvSvQpMAWuIz12pThGGlWRW -u 1252448703 -b uploadtest -r cn-south -m 10 -p 5
+
+ 上传文件
+ coscmd upload file1 file2
+
+ 上传文件夹
+ coscmd upload folder1 folder2
+
+.. code::
  
-如果上传成功，命令行会返回0
+
+
+
+注意事项
+!!!!!!!!
+
+该版本为测试版
+max_thread <= 10
+parts_size <= 10
